@@ -223,11 +223,13 @@ Apa yang dikerjakan (1-3 kalimat).
 
 ## Kesalahan yang Sering Terjadi
 
-| Kesalahan                                        | Cara menghindari                         |
-| ------------------------------------------------ | ---------------------------------------- |
-| Commit tanpa cek branch (nyasar di `main`/`dev`) | `git branch` sebelum commit (Langkah 4c) |
-| `base` PR masih `main`                           | Cek Langkah 9                            |
-| Branch dibuat dari `main`                        | Buat dari `origin/dev` (Langkah 2)       |
-| `git add .` membawa file bukan milikmu           | Baca daftar hijau di `git status`        |
-| Lupa gabung `dev` terbaru                        | Lakukan Langkah 5                        |
-| Satu PR isinya banyak tugas                      | Satu branch = satu tugas                 |
+| Kesalahan                                   | Akibat                                      | Cara menghindari                                                               |
+| ------------------------------------------- | ------------------------------------------- | ------------------------------------------------------------------------------ |
+| **Commit tanpa cek branch**                 | Commit nyasar di `main`/`dev`, push ditolak | Jalankan `git branch` **sebelum setiap commit** dan cek tanda `*` (Langkah 4c) |
+| `base` PR masih `main`                      | PR menuju branch yang salah                 | Selalu cek Langkah 9                                                           |
+| Branch baru dibuat dari `main`              | Tidak membawa kode terbaru, PR bentrok      | Buat dari `origin/dev` (Langkah 2)                                             |
+| `git add .` membawa file yang bukan milikmu | PR berisi perubahan acak, susah direview    | Baca daftar hijau di `git status` sebelum commit                               |
+| Lupa gabung `dev` terbaru                   | PR bentrok                                  | Lakukan Langkah 5                                                              |
+| Satu PR isinya banyak tugas                 | Susah direview, rawan bentrok               | Satu branch = satu tugas                                                       |
+| Pesan commit `update` / `fix`               | Tidak jelas apa yang berubah                | Pakai format `jenis(bagian): deskripsi`                                        |
+| File `.env` ikut ter-commit                 | Rahasia bocor                               | Cek `git status` sebelum `git add`                                             |
