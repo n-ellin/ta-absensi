@@ -1,0 +1,194 @@
+@layer theme, bootstrap, utilities;
+
+@import "tailwindcss/theme.css" layer(theme);
+@import "bootstrap/dist/css/bootstrap.min.css" layer(bootstrap);
+@import "tailwindcss/utilities.css" layer(utilities);
+
+/* =========================================================
+   Design tokens E-Absensi
+   ========================================================= */
+:root {
+  /* Merek */
+  --color-brand-primary: #282333;
+  --color-brand-secondary: #514857;
+  --color-brand-accent: #807583;
+
+  /* Latar */
+  --color-bg-main: #f5efef;
+  --color-bg-card: #ffffff;
+  --color-bg-soft: #f9f5f5;
+
+  /* Teks */
+  --color-text-primary: #282333;
+  --color-text-secondary: #514857;
+  --color-text-muted: #807583;
+  --color-text-disabled: #c4bdc5;
+  --color-text-light: #ffffff;
+
+  /* Garis */
+  --color-border: #d1c7d1;
+  --color-border-strong: #b1a8b2;
+  --color-border-focus: #514857;
+
+  /* Status */
+  --color-success: #4f7a64;
+  --color-warning: #a47745;
+  --color-danger: #a05252;
+  --color-info: #5c718a;
+  --color-success-bg: #e8f0eb;
+  --color-warning-bg: #f4ede3;
+  --color-danger-bg: #f4e7e7;
+  --color-info-bg: #e9eef2;
+}
+
+/* =========================================================
+   Petakan token ke variabel Bootstrap
+   ========================================================= */
+:root {
+  --bs-body-bg: var(--color-bg-main);
+  --bs-body-color: var(--color-text-primary);
+  --bs-body-color-rgb: 40, 35, 51;
+  --bs-secondary-color: var(--color-text-muted);
+  --bs-border-color: var(--color-border);
+
+  --bs-primary: var(--color-brand-primary);
+  --bs-primary-rgb: 40, 35, 51;
+  --bs-secondary: var(--color-text-muted);
+  --bs-secondary-rgb: 128, 117, 131;
+  --bs-dark: var(--color-brand-primary);
+  --bs-dark-rgb: 40, 35, 51;
+
+  --bs-success: var(--color-success);
+  --bs-success-rgb: 79, 122, 100;
+  --bs-warning: var(--color-warning);
+  --bs-warning-rgb: 164, 119, 69;
+  --bs-danger: var(--color-danger);
+  --bs-danger-rgb: 160, 82, 82;
+  --bs-info: var(--color-info);
+  --bs-info-rgb: 92, 113, 138;
+
+  /* Alert (alert-success, alert-danger, dst.) */
+  --bs-success-bg-subtle: var(--color-success-bg);
+  --bs-success-text-emphasis: var(--color-success);
+  --bs-success-border-subtle: var(--color-success);
+  --bs-warning-bg-subtle: var(--color-warning-bg);
+  --bs-warning-text-emphasis: var(--color-warning);
+  --bs-warning-border-subtle: var(--color-warning);
+  --bs-danger-bg-subtle: var(--color-danger-bg);
+  --bs-danger-text-emphasis: var(--color-danger);
+  --bs-danger-border-subtle: var(--color-danger);
+  --bs-info-bg-subtle: var(--color-info-bg);
+  --bs-info-text-emphasis: var(--color-info);
+  --bs-info-border-subtle: var(--color-info);
+
+  /* Validasi form */
+  --bs-form-invalid-color: var(--color-danger);
+  --bs-form-invalid-border-color: var(--color-danger);
+
+  /* Link */
+  --bs-link-color: var(--color-brand-secondary);
+  --bs-link-color-rgb: 81, 72, 87;
+  --bs-link-hover-color: var(--color-brand-primary);
+  --bs-link-hover-color-rgb: 40, 35, 51;
+}
+
+/* =========================================================
+   Tombol
+   ========================================================= */
+.btn-dark {
+  --bs-btn-bg: var(--color-brand-primary);
+  --bs-btn-border-color: var(--color-brand-primary);
+  --bs-btn-hover-bg: var(--color-brand-secondary);
+  --bs-btn-hover-border-color: var(--color-brand-secondary);
+  --bs-btn-active-bg: var(--color-brand-secondary);
+  --bs-btn-active-border-color: var(--color-brand-secondary);
+  --bs-btn-disabled-bg: var(--color-brand-accent);
+  --bs-btn-disabled-border-color: var(--color-brand-accent);
+}
+
+.btn-outline-secondary {
+  --bs-btn-color: var(--color-text-primary);
+  --bs-btn-border-color: var(--color-border);
+  --bs-btn-hover-color: var(--color-text-primary);
+  --bs-btn-hover-bg: var(--color-bg-soft);
+  --bs-btn-hover-border-color: var(--color-border-strong);
+  --bs-btn-active-color: var(--color-text-primary);
+  --bs-btn-active-bg: var(--color-bg-soft);
+  --bs-btn-active-border-color: var(--color-border-strong);
+  --bs-btn-disabled-color: var(--color-text-disabled);
+  --bs-btn-disabled-border-color: var(--color-border);
+}
+
+/* =========================================================
+   Autofill Chrome: hilangkan latar biru
+   ========================================================= */
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active {
+  -webkit-box-shadow: 0 0 0 1000px var(--color-bg-card) inset;
+  -webkit-text-fill-color: var(--color-text-primary);
+  caret-color: var(--color-text-primary);
+  transition: background-color 5000s ease-in-out 0s;
+}
+
+/* =========================================================
+   Form: fokus satu kesatuan untuk input-group
+   ========================================================= */
+.input-group:not(:has(.is-invalid)) {
+  border-radius: var(--bs-border-radius);
+}
+
+.input-group:not(:has(.is-invalid)):focus-within {
+  box-shadow: 0 0 0 0.2rem rgba(209, 199, 209, 0.5);
+}
+
+.input-group:not(:has(.is-invalid)):focus-within .form-control,
+.input-group:not(:has(.is-invalid)):focus-within .form-select,
+.input-group:not(:has(.is-invalid)):focus-within .input-group-text {
+  border-color: var(--color-border-focus);
+}
+
+.input-group:not(:has(.is-invalid)) .form-control:focus,
+.input-group:not(:has(.is-invalid)) .form-select:focus {
+  box-shadow: none;
+}
+
+/* Input group saat validasi error */
+.input-group:has(.is-invalid) {
+  border-radius: var(--bs-border-radius);
+  box-shadow: 0 0 0 0.2rem rgba(160, 82, 82, 0.15);
+}
+
+.input-group:has(.is-invalid) .input-group-text {
+  border-color: var(--color-danger);
+  background-color: var(--color-bg-card);
+}
+
+.input-group:has(.is-invalid) .form-control.is-invalid {
+  border-color: var(--color-danger);
+  background-image: none;
+  box-shadow: none;
+}
+
+/* Checkbox */
+.form-check-input:checked {
+  background-color: var(--color-brand-primary);
+  border-color: var(--color-brand-primary);
+}
+
+.form-check-input:focus {
+  border-color: var(--color-border-focus);
+  box-shadow: 0 0 0 0.2rem rgba(209, 199, 209, 0.5);
+}
+
+/* Card dan field tetap putih meski latar halaman krem */
+.card {
+  --bs-card-bg: var(--color-bg-card);
+}
+
+.form-control,
+.form-select,
+.form-check-input:not(:checked) {
+  background-color: var(--color-bg-card);
+}
