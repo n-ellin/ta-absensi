@@ -2,12 +2,12 @@ interface ErrorTextProps {
   message?: string;
 }
 
-const ErrorText = ({ message }: ErrorTextProps) => {
-  if (!message) {
-    return null;
-  }
+export function ErrorText({ message }: ErrorTextProps) {
+  if (!message) return null;
 
-  return <p role="alert">{message}</p>;
-};
-
-export default ErrorText;
+  return (
+    <p className="text-danger small mt-1 mb-0" role="alert">
+      {message}
+    </p>
+  );
+}

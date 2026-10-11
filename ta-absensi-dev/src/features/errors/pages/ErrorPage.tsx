@@ -10,54 +10,54 @@ type ErrorContent = {
 
 const ERROR_CONTENT: Record<string, ErrorContent> = {
   "400": {
-    title: "Bad request",
+    title: "Permintaan tidak valid",
     description:
-      "The request could not be understood. Please check the address or the information you sent and try again.",
-    actionLabel: "Go Home",
+      "Permintaan tidak dapat dipahami. Periksa kembali alamat atau data yang Anda kirim, lalu coba lagi.",
+    actionLabel: "Ke Beranda",
     actionTo: "/",
   },
   "401": {
-    title: "Sign in required",
+    title: "Anda perlu masuk",
     description:
-      "You need to sign in to view this page. Please log in with your account and try again.",
-    actionLabel: "Go to Login",
+      "Anda harus masuk untuk melihat halaman ini. Silakan masuk dengan akun Anda, lalu coba lagi.",
+    actionLabel: "Ke Halaman Masuk",
     actionTo: "/login",
   },
   "403": {
-    title: "Access denied",
+    title: "Akses ditolak",
     description:
-      "You don't have permission to view this page. If you think this is a mistake, please contact your administrator.",
-    actionLabel: "Go Home",
+      "Anda tidak memiliki izin untuk melihat halaman ini. Jika menurut Anda ini keliru, silakan hubungi administrator.",
+    actionLabel: "Ke Beranda",
     actionTo: "/",
   },
   "404": {
-    title: "Page not found",
+    title: "Halaman tidak ditemukan",
     description:
-      "Sorry, the page you are looking for could not be found. It may have been moved, deleted, or never existed.",
-    actionLabel: "Go Home",
+      "Maaf, halaman yang Anda cari tidak dapat ditemukan. Halaman mungkin sudah dipindahkan, dihapus, atau memang tidak pernah ada.",
+    actionLabel: "Ke Beranda",
     actionTo: "/",
   },
   "500": {
-    title: "Something went wrong",
+    title: "Terjadi kesalahan",
     description:
-      "An unexpected error occurred on our side. Please try again in a moment.",
-    actionLabel: "Back to Home",
+      "Terjadi kesalahan tak terduga di sisi kami. Silakan coba lagi beberapa saat lagi.",
+    actionLabel: "Kembali ke Beranda",
     actionTo: "/",
   },
   "503": {
-    title: "Service unavailable",
+    title: "Layanan tidak tersedia",
     description:
-      "We're temporarily unable to handle your request. Please try again in a few minutes.",
-    actionLabel: "Back to Home",
+      "Kami sedang tidak dapat memproses permintaan Anda. Silakan coba lagi dalam beberapa menit.",
+    actionLabel: "Kembali ke Beranda",
     actionTo: "/",
   },
 };
 
 const DEFAULT_CONTENT: ErrorContent = {
-  title: "Something went wrong",
+  title: "Terjadi kesalahan",
   description:
-    "An unexpected error occurred. Please try again or return to the home page.",
-  actionLabel: "Go Home",
+    "Terjadi kesalahan tak terduga. Silakan coba lagi atau kembali ke beranda.",
+  actionLabel: "Ke Beranda",
   actionTo: "/",
 };
 
@@ -161,7 +161,7 @@ export const ErrorPage = ({
           <button
             type="button"
             onClick={() => navigate(content.actionTo)}
-            className="group mt-10 inline-flex items-center gap-4 rounded-full bg-[#282333] py-2 pl-7 pr-2 text-sm font-medium tracking-wide text-white shadow-[0_6px_18px_-8px_rgba(40,35,51,0.5)] transition-all duration-300 ease-out hover:gap-5 hover:shadow-[0_14px_30px_-10px_rgba(40,35,51,0.55)] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#A47745] focus-visible:ring-offset-2 focus-visible:ring-offset-[#F5EFEF] sm:text-base"
+            className="group mt-10 inline-flex items-center gap-4 rounded-full! bg-[#282333] py-2 pl-7 pr-2 text-sm font-medium tracking-wide text-white shadow-[0_6px_18px_-8px_rgba(40,35,51,0.5)] transition-all duration-300 ease-out hover:gap-5 hover:shadow-[0_14px_30px_-10px_rgba(40,35,51,0.55)] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#A47745] focus-visible:ring-offset-2 focus-visible:ring-offset-[#F5EFEF] sm:text-base"
           >
             <span>{content.actionLabel}</span>
             <span className="flex h-10 w-10 items-center justify-center rounded-full bg-white text-[#282333] transition-transform duration-300 ease-out group-hover:scale-105">

@@ -1,7 +1,11 @@
-import Spinner from "../Spinner/Spinner";
+import { FadeArc } from "../Spinner/fade-arc";
 
 const PageLoader = () => {
-  return <Spinner />;
+  return (
+    <div className="flex min-h-screen items-center justify-center">
+      <FadeArc className="size-15 text-[#282333]" />
+    </div>
+  );
 };
 
 export default PageLoader;
