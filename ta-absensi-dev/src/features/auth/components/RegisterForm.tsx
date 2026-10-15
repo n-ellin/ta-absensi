@@ -8,23 +8,25 @@ import { Alert } from "@/components/ui/Alert/Alert";
 import { Divider } from "@/components/ui/Divider";
 import { useRegister } from "../hooks/useRegister";
 import { GoogleButton } from "./GoogleButton";
-import { PasswordStrength } from "../components/PasswordStrength";
+import { PasswordStrength } from "./PasswordStrength";
 
 export function RegisterForm() {
-   const {
-     form: {
-       register,
-       control,
-       formState: { errors },
-     },
-     onSubmit,
-     serverError,
-     isSubmitting,
-     handleGoogleRegister,
-   } = useRegister();
+  const {
+    form: {
+      register,
+      control,
+      formState: { errors },
+    },
+    onSubmit,
+    serverError,
+    isSubmitting,
+    googleEnabled,
+    googleFailed,
+    handleGoogleUnavailable,
+    googleContainerRef,
+  } = useRegister();
 
    const password = useWatch({ control, name: "password" }) ?? "";
-console.log("[debug] password =", password);
   return (
     <form onSubmit={onSubmit} noValidate>
       <h1 className="h4 fw-bold mb-1">Buat Akun Baru</h1>
@@ -60,8 +62,8 @@ console.log("[debug] password =", password);
         placeholder="Masukkan nomor induk siswa nasional"
         inputMode="numeric"
         maxLength={10}
-        error={errors.identityNumber?.message}
-        {...register("identityNumber")}
+        error={errors.nisn?.message}
+        {...register("nisn")}
       />
 
       <PasswordInput
@@ -89,10 +91,16 @@ console.log("[debug] password =", password);
       </Button>
 
       <Divider text="ATAU" />
-
-      <GoogleButton onClick={handleGoogleRegister}>
-        Daftar dengan Google
-      </GoogleButton>
+      {!googleEnabled || googleFailed ? (
+        <GoogleButton onClick={handleGoogleUnavailable}>
+          Daftar dengan Google
+        </GoogleButton>
+      ) : (
+        <div
+          ref={googleContainerRef}
+          className="d-flex justify-content-center"
+        />
+      )}
 
       <p className="text-center small text-secondary mt-3 mb-0">
         Sudah punya akun?{" "}

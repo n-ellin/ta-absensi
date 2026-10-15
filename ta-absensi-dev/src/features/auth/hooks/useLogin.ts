@@ -1,33 +1,51 @@
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useNavigate } from "react-router-dom";
 import { loginSchema, type LoginFormValues } from "../schemas/LoginSchema";
-import { login } from "../services/authService";
-import { getLoginErrorType, getServerMessage } from "../utils/authError";
+import { googleLogin, login } from "../services/authService";
+import {
+  getErrorCode,
+  getLoginErrorType,
+  getServerMessage,
+} from "../utils/authError";
+import { useAuth } from "./useAuth";
+import { useGoogleAuth } from "./useGoogleAuth";
+import type { AuthData } from "../interface/auth";
 
 export type LoginAlert = { variant: "danger" | "warning"; message: string };
 
 export function useLogin() {
   const navigate = useNavigate();
+  const { setAuth } = useAuth();
   const [alert, setAlert] = useState<LoginAlert | null>(null);
   const [isDisabledModalOpen, setDisabledModalOpen] = useState(false);
 
-const form = useForm<LoginFormValues>({
-  resolver: zodResolver(loginSchema),
-  defaultValues: { email: "", password: "" },
-});
+  const form = useForm<LoginFormValues>({
+    resolver: zodResolver(loginSchema),
+    defaultValues: { email: "", password: "" },
+  });
 
+  const finishLogin = useCallback(
+    (data: AuthData) => {
+      setAuth(data.user, data.access_token, data.refresh_token);
+      navigate("/", { replace: true });
+    },
+    [setAuth, navigate],
+  );
 
   const onSubmit = form.handleSubmit(async (values) => {
     setAlert(null);
 
     try {
-      await login(values);
-
-      // TODO: simpan token/user ke authStore (setAuth) setelah response BE jelas,
-      // lalu arahkan sesuai role (siswa/guru/admin). Sementara ke "/".
-      navigate("/", { replace: true });
+      // BE menerima "identifier" (email ATAU username); form kita hanya email.
+      const res = await login({
+        identifier: values.email,
+        password: values.password,
+      });
+      if (res.success && res.data) {
+        finishLogin(res.data);
+      }
     } catch (error) {
       switch (getLoginErrorType(error)) {
         case "invalid_credentials":
@@ -46,6 +64,13 @@ const form = useForm<LoginFormValues>({
         case "disabled":
           setDisabledModalOpen(true);
           break;
+        case "rate_limited":
+          setAlert({
+            variant: "warning",
+            message:
+              "Terlalu banyak permintaan. Tunggu sebentar lalu coba lagi.",
+          });
+          break;
         default:
           setAlert({
             variant: "danger",
@@ -58,9 +83,61 @@ const form = useForm<LoginFormValues>({
     }
   });
 
-  const handleGoogleLogin = () => {
-    // TODO: sambungkan ke flow OAuth Google setelah endpoint dari Backend siap
-  };
+  const handleGoogleCredential = useCallback(
+    async (idToken: string) => {
+      setAlert(null);
+      try {
+        const res = await googleLogin({
+          id_token: idToken,
+          device_info: "web",
+        });
+        if (res.success && res.data) {
+          finishLogin(res.data);
+        }
+      } catch (error) {
+        const code = getErrorCode(error);
+        if (code === "AUTH_ACCOUNT_NOT_FOUND") {
+          setAlert({
+            variant: "danger",
+            message:
+              "Email Google belum terdaftar. Silakan daftar terlebih dahulu.",
+          });
+        } else if (code === "AUTH_GOOGLE_DISABLED") {
+          setAlert({
+            variant: "warning",
+            message: "Login Google belum diaktifkan di server.",
+          });
+        } else if (code === "AUTH_GOOGLE_EMAIL_UNVERIFIED") {
+          setAlert({
+            variant: "danger",
+            message: "Email Google Anda belum terverifikasi.",
+          });
+        } else {
+          setAlert({
+            variant: "danger",
+            message: getServerMessage(
+              error,
+              "Login Google gagal, coba lagi beberapa saat.",
+            ),
+          });
+        }
+      }
+    },
+    [finishLogin],
+  );
+
+  const handleGoogleError = useCallback(() => {
+    setAlert({
+      variant: "warning",
+      message:
+        "Login dengan Google sedang tidak tersedia. Silakan masuk dengan surel dan kata sandi.",
+    });
+  }, []);
+
+  const { googleEnabled, googleFailed, googleContainerRef } = useGoogleAuth(
+    handleGoogleCredential,
+    handleGoogleError,
+  );
 
   return {
     form,
@@ -69,6 +146,9 @@ const form = useForm<LoginFormValues>({
     isSubmitting: form.formState.isSubmitting,
     isDisabledModalOpen,
     closeDisabledModal: () => setDisabledModalOpen(false),
-    handleGoogleLogin,
+    googleEnabled,
+    googleFailed,
+    handleGoogleUnavailable: handleGoogleError,
+    googleContainerRef,
   };
 }
