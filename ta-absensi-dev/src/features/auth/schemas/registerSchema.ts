@@ -13,7 +13,7 @@ export const registerSchema = z
       .trim()
       .min(1, "Surel wajib diisi")
       .email("Format surel tidak valid"),
-    identityNumber: z
+    nisn: z
       .string()
       .trim()
       .min(1, "NISN wajib diisi")

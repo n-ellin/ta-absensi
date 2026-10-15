@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useNavigate } from "react-router-dom";
@@ -6,11 +6,17 @@ import {
   registerSchema,
   type RegisterFormValues,
 } from "../schemas/registerSchema";
-import { register } from "../services/authService";
+import {
+  googleLogin,
+  register as registerService,
+} from "../services/authService";
 import { getServerMessage } from "../utils/authError";
+import { useAuth } from "./useAuth";
+import { useGoogleAuth } from "./useGoogleAuth";
 
 export function useRegister() {
   const navigate = useNavigate();
+  const { setAuth } = useAuth();
   const [serverError, setServerError] = useState<string | null>(null);
 
   const form = useForm<RegisterFormValues>({
@@ -18,7 +24,7 @@ export function useRegister() {
     defaultValues: {
       name: "",
       email: "",
-      identityNumber: "",
+      nisn: "",
       password: "",
       confirmPassword: "",
     },
@@ -29,10 +35,10 @@ export function useRegister() {
 
     try {
       // confirmPassword hanya untuk validasi FE, tidak dikirim ke BE.
-      await register({
+      await registerService({
         name: values.name,
         email: values.email,
-        identityNumber: values.identityNumber,
+        nisn: values.nisn,
         password: values.password,
       });
       navigate("/login", { replace: true });
@@ -43,15 +49,46 @@ export function useRegister() {
     }
   });
 
-  const handleGoogleRegister = () => {
-    // TODO: sambungkan ke flow OAuth Google setelah endpoint dari Backend siap
-  };
+  const handleGoogleCredential = useCallback(
+    async (idToken: string) => {
+      setServerError(null);
+      try {
+        const res = await googleLogin({
+          id_token: idToken,
+          device_info: "web",
+        });
+        if (res.success && res.data) {
+          setAuth(res.data.user, res.data.access_token, res.data.refresh_token);
+          navigate("/", { replace: true });
+        }
+      } catch (error) {
+        setServerError(
+          getServerMessage(error, "Masuk dengan Google gagal, coba lagi."),
+        );
+      }
+    },
+    [setAuth, navigate],
+  );
+
+  const handleGoogleError = useCallback(() => {
+    setServerError(
+      "Daftar dengan Google sedang tidak tersedia. Silakan daftar dengan surel dan kata sandi.",
+    );
+  }, []);
+
+  const { googleEnabled, googleFailed, googleContainerRef } = useGoogleAuth(
+    handleGoogleCredential,
+    handleGoogleError,
+  );
 
   return {
     form,
     onSubmit,
     serverError,
     isSubmitting: form.formState.isSubmitting,
-    handleGoogleRegister,
+    googleEnabled,
+    googleFailed,
+    handleGoogleUnavailable: handleGoogleError,
+    googleContainerRef,
   };
 }
