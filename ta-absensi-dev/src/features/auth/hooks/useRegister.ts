@@ -6,10 +6,7 @@ import {
   registerSchema,
   type RegisterFormValues,
 } from "../schemas/registerSchema";
-import {
-  googleLogin,
-  register as registerService,
-} from "../services/authService";
+import { AuthServices } from "../services/authService";
 import { getServerMessage } from "../utils/authError";
 import { useAuth } from "./useAuth";
 import { useGoogleAuth } from "./useGoogleAuth";
@@ -35,12 +32,12 @@ export function useRegister() {
 
     try {
       // confirmPassword hanya untuk validasi FE, tidak dikirim ke BE.
-      await registerService({
-        name: values.name,
-        email: values.email,
-        nisn: values.nisn,
-        password: values.password,
-      });
+await AuthServices.register({
+  name: values.name,
+  email: values.email,
+  nisn: values.nisn,
+  password: values.password,
+});
       navigate("/login", { replace: true });
     } catch (error) {
       setServerError(
@@ -53,10 +50,10 @@ export function useRegister() {
     async (idToken: string) => {
       setServerError(null);
       try {
-        const res = await googleLogin({
-          id_token: idToken,
-          device_info: "web",
-        });
+const res = await AuthServices.googleLogin({
+  id_token: idToken,
+  device_info: "web",
+});
         if (res.success && res.data) {
           setAuth(res.data.user, res.data.access_token, res.data.refresh_token);
           navigate("/", { replace: true });

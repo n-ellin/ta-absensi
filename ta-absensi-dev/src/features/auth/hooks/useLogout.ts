@@ -1,10 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuthStore } from "@/core/store/authStore";
-import {
-  logout as logoutRequest,
-  logoutAll as logoutAllRequest,
-} from "../services/authService";
+import { AuthServices } from "../services/authService";
 
 export function useLogout() {
   const navigate = useNavigate();
@@ -22,7 +19,7 @@ export function useLogout() {
     setIsLoggingOut(true);
     try {
       if (token && refreshToken) {
-        await logoutRequest({ refresh_token: refreshToken });
+await AuthServices.logout({ refresh_token: refreshToken });
       }
     } catch {
       // Token mungkin sudah tidak valid — sesi lokal tetap dibersihkan
@@ -34,7 +31,7 @@ export function useLogout() {
   const handleLogoutAll = async () => {
     setIsLoggingOut(true);
     try {
-      if (token) await logoutAllRequest();
+  if (token) await AuthServices.logoutAll();
     } catch {
       // Abaikan — sesi lokal tetap dibersihkan
     } finally {
