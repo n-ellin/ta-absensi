@@ -1,6 +1,7 @@
 import { Suspense, type ReactElement } from "react";
 import { createBrowserRouter } from "react-router-dom";
 import lazyWithRetry from "./lazyWithRetry";
+import ProtectedRoute from "./ProtectedRoute";
 import PageLoader from "@/components/ui/PageLoader";
 
 const ErrorPage = lazyWithRetry(() =>
@@ -14,6 +15,9 @@ const RegisterPage = lazyWithRetry(
 const LoginPage = lazyWithRetry(
   () => import("@/features/auth/pages/LoginPage"),
 );
+const DashboardPage = lazyWithRetry(
+  () => import("@/features/dashboard/pages/DashboardPage"),
+);
 
 const withSuspense = (element: ReactElement) => (
   <Suspense fallback={<PageLoader />}>{element}</Suspense>
@@ -24,6 +28,15 @@ const router = createBrowserRouter([
     // Menangkap error runtime/loader di semua child route sebagai 500
     errorElement: withSuspense(<ErrorPage code="500" />),
     children: [
+      // Halaman yang butuh login
+      {
+        path: "/",
+        element: <ProtectedRoute />,
+        children: [
+          { index: true, element: withSuspense(<DashboardPage />) },
+        ],
+      },
+      // Halaman auth tanpa login
       {
         path: "/login",
         element: withSuspense(<LoginPage />),
