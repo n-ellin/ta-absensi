@@ -3,7 +3,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useNavigate } from "react-router-dom";
 import { loginSchema, type LoginFormValues } from "../schemas/LoginSchema";
-import { googleLogin, login } from "../services/authService";
+import { AuthServices } from "../services/authService";
 import {
   getErrorCode,
   getLoginErrorType,
@@ -38,8 +38,7 @@ export function useLogin() {
     setAlert(null);
 
     try {
-      // BE menerima "identifier" (email ATAU username); form kita hanya email.
-      const res = await login({
+      const res = await AuthServices.login({
         identifier: values.email,
         password: values.password,
       });
@@ -87,10 +86,10 @@ export function useLogin() {
     async (idToken: string) => {
       setAlert(null);
       try {
-        const res = await googleLogin({
-          id_token: idToken,
-          device_info: "web",
-        });
+const res = await AuthServices.googleLogin({
+  id_token: idToken,
+  device_info: "web",
+});
         if (res.success && res.data) {
           finishLogin(res.data);
         }

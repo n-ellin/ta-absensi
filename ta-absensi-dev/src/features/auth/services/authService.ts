@@ -13,53 +13,74 @@ import type {
 } from "../interface/auth";
 
 // Semua endpoint BE memakai envelope { success, code, message, data }
-async function request<T>(
-  req: Promise<{ data: ApiResponse<T> }>,
-): Promise<ApiResponse<T>> {
-  const { data } = await req;
-  return data;
-}
+export const AuthServices = {
+  async register(payload: RegisterPayload): Promise<ApiResponse<User>> {
+    const response = await api.post("/auth/register", payload);
+    return response.data;
+  },
 
-export const register = (payload: RegisterPayload) =>
-  request<User>(api.post<ApiResponse<User>>("/auth/register", payload));
+  async login(payload: LoginPayload): Promise<ApiResponse<AuthData>> {
+    const response = await api.post("/auth/login", payload);
+    return response.data;
+  },
 
-export const login = (payload: LoginPayload) =>
-  request<AuthData>(api.post<ApiResponse<AuthData>>("/auth/login", payload));
+  async googleLogin(
+    payload: GoogleLoginPayload,
+  ): Promise<ApiResponse<AuthData>> {
+    const response = await api.post("/auth/google", payload);
+    return response.data;
+  },
 
-export const googleLogin = (payload: GoogleLoginPayload) =>
-  request<AuthData>(api.post<ApiResponse<AuthData>>("/auth/google", payload));
+  async refresh(payload: RefreshPayload): Promise<ApiResponse<AuthData>> {
+    const response = await api.post("/auth/refresh", payload);
+    return response.data;
+  },
 
-export const refresh = (payload: RefreshPayload) =>
-  request<AuthData>(api.post<ApiResponse<AuthData>>("/auth/refresh", payload));
+  async logout(payload: RefreshPayload): Promise<ApiResponse<null>> {
+    const response = await api.post("/auth/logout", payload);
+    return response.data;
+  },
 
-export const logout = (payload: RefreshPayload) =>
-  request<null>(api.post<ApiResponse<null>>("/auth/logout", payload));
+  async logoutAll(): Promise<ApiResponse<{ revoked_sessions: number }>> {
+    const response = await api.post("/auth/logout-all");
+    return response.data;
+  },
 
-export const logoutAll = () =>
-  request<{ revoked_sessions: number }>(
-    api.post<ApiResponse<{ revoked_sessions: number }>>("/auth/logout-all"),
-  );
+  async forgotPassword(
+    payload: ForgotPasswordPayload,
+  ): Promise<ApiResponse<null>> {
+    const response = await api.post("/auth/forgot-password", payload);
+    return response.data;
+  },
 
-export const forgotPassword = (payload: ForgotPasswordPayload) =>
-  request<null>(api.post<ApiResponse<null>>("/auth/forgot-password", payload));
+  async resendForgotPassword(
+    payload: ForgotPasswordPayload,
+  ): Promise<ApiResponse<null>> {
+    const response = await api.post("/auth/forgot-password/resend", payload);
+    return response.data;
+  },
 
-export const resendForgotPassword = (payload: ForgotPasswordPayload) =>
-  request<null>(
-    api.post<ApiResponse<null>>("/auth/forgot-password/resend", payload),
-  );
+  async resetPassword(
+    payload: ResetPasswordPayload,
+  ): Promise<ApiResponse<null>> {
+    const response = await api.post("/auth/forgot-password/verify", payload);
+    return response.data;
+  },
 
-export const resetPassword = (payload: ResetPasswordPayload) =>
-  request<null>(
-    api.post<ApiResponse<null>>("/auth/forgot-password/verify", payload),
-  );
+  async requestChangePassword(): Promise<ApiResponse<null>> {
+    const response = await api.post("/auth/change-password/request");
+    return response.data;
+  },
 
-export const requestChangePassword = () =>
-  request<null>(api.post<ApiResponse<null>>("/auth/change-password/request"));
+  async resendChangePassword(): Promise<ApiResponse<null>> {
+    const response = await api.post("/auth/change-password/resend");
+    return response.data;
+  },
 
-export const resendChangePassword = () =>
-  request<null>(api.post<ApiResponse<null>>("/auth/change-password/resend"));
-
-export const changePassword = (payload: ChangePasswordPayload) =>
-  request<null>(
-    api.post<ApiResponse<null>>("/auth/change-password/verify", payload),
-  );
+  async changePassword(
+    payload: ChangePasswordPayload,
+  ): Promise<ApiResponse<null>> {
+    const response = await api.post("/auth/change-password/verify", payload);
+    return response.data;
+  },
+};
