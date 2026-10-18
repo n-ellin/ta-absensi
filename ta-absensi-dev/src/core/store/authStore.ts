@@ -6,9 +6,15 @@ interface AuthState {
   user: User | null;
   token: string | null; // access token
   refreshToken: string | null;
+  expiresAt: number | null; // epoch ms kapan access token habis (dari expires_in)
   isAuthenticated: boolean;
 
-  setAuth: (user: User, token: string, refreshToken: string) => void;
+  setAuth: (
+    user: User,
+    token: string,
+    refreshToken: string,
+    expiresIn?: number,
+  ) => void;
   logout: () => void;
 }
 
@@ -18,10 +24,17 @@ export const useAuthStore = create<AuthState>()(
       user: null,
       token: null,
       refreshToken: null,
+      expiresAt: null,
       isAuthenticated: false,
 
-      setAuth: (user, token, refreshToken) => {
-        set({ user, token, refreshToken, isAuthenticated: true });
+      setAuth: (user, token, refreshToken, expiresIn) => {
+        set({
+          user,
+          token,
+          refreshToken,
+          expiresAt: expiresIn ? Date.now() + expiresIn * 1000 : null,
+          isAuthenticated: true,
+        });
       },
 
       logout: () => {
@@ -29,6 +42,7 @@ export const useAuthStore = create<AuthState>()(
           user: null,
           token: null,
           refreshToken: null,
+          expiresAt: null,
           isAuthenticated: false,
         });
       },
@@ -39,6 +53,7 @@ export const useAuthStore = create<AuthState>()(
         user: state.user,
         token: state.token,
         refreshToken: state.refreshToken,
+        expiresAt: state.expiresAt,
         isAuthenticated: state.isAuthenticated,
       }),
     },

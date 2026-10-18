@@ -11,7 +11,6 @@ export interface User {
   id: number;
   name: string;
   email: string;
-  username?: string | null;
   nisn?: string | null;
   avatar_url?: string | null;
   is_active: boolean;
@@ -34,7 +33,7 @@ export interface RegisterPayload {
 }
 
 export interface LoginPayload {
-  identifier: string; // email ATAU username
+  identifier: string; // email (login FE hanya lewat email)
   password: string;
   device_info?: string;
 }

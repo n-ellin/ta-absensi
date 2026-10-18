@@ -12,6 +12,7 @@ import {
 import { useAuth } from "./useAuth";
 import { useGoogleAuth } from "./useGoogleAuth";
 import type { AuthData } from "../interface/auth";
+import { getDeviceInfo } from "../utils/deviceInfo";
 
 export type LoginAlert = { variant: "danger" | "warning"; message: string };
 
@@ -26,22 +27,23 @@ export function useLogin() {
     defaultValues: { email: "", password: "" },
   });
 
-  const finishLogin = useCallback(
-    (data: AuthData) => {
-      setAuth(data.user, data.access_token, data.refresh_token);
-      navigate("/", { replace: true });
-    },
-    [setAuth, navigate],
-  );
+const finishLogin = useCallback(
+  (data: AuthData) => {
+    setAuth(data.user, data.access_token, data.refresh_token, data.expires_in);
+    navigate("/", { replace: true });
+  },
+  [setAuth, navigate],
+);
 
   const onSubmit = form.handleSubmit(async (values) => {
     setAlert(null);
 
     try {
-      const res = await AuthServices.login({
-        identifier: values.email,
-        password: values.password,
-      });
+const res = await AuthServices.login({
+  identifier: values.email,
+  password: values.password,
+  device_info: getDeviceInfo(),
+});
       if (res.success && res.data) {
         finishLogin(res.data);
       }
@@ -88,7 +90,7 @@ export function useLogin() {
       try {
 const res = await AuthServices.googleLogin({
   id_token: idToken,
-  device_info: "web",
+  device_info: getDeviceInfo(),
 });
         if (res.success && res.data) {
           finishLogin(res.data);
