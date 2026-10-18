@@ -35,8 +35,10 @@ async function refreshAccessToken(): Promise<string | null> {
       { refresh_token: refreshToken },
     );
     if (data.success && data.data) {
-      const { user, access_token, refresh_token } = data.data;
-      useAuthStore.getState().setAuth(user, access_token, refresh_token);
+      const { user, access_token, refresh_token, expires_in } = data.data;
+      useAuthStore
+        .getState()
+        .setAuth(user, access_token, refresh_token, expires_in);
       return access_token;
     }
     return null;
@@ -104,5 +106,39 @@ api.interceptors.response.use(
     return Promise.reject(error);
   },
 );
+
+
+// ---- Refresh proaktif: jadwalkan refresh 60 detik sebelum access token habis ----
+// Interceptor 401 di atas tetap menjadi fallback bila jadwal ini meleset.
+const REFRESH_MARGIN_MS = 60_000;
+let refreshTimer: ReturnType<typeof setTimeout> | null = null;
+
+function scheduleProactiveRefresh() {
+  if (refreshTimer) {
+    clearTimeout(refreshTimer);
+    refreshTimer = null;
+  }
+
+  const { token, refreshToken, expiresAt } = useAuthStore.getState();
+  if (!token || !refreshToken || !expiresAt) return;
+
+  const delay = Math.max(expiresAt - Date.now() - REFRESH_MARGIN_MS, 0);
+  refreshTimer = setTimeout(async () => {
+    const newToken = await refreshAccessToken();
+    // Gagal refresh (sesi kedaluwarsa/dicabut) → paksa login ulang
+    if (!newToken) {
+      useAuthStore.getState().logout();
+      redirectTo("/login");
+    }
+  }, delay);
+}
+
+// Jadwalkan ulang tiap access token / expiresAt berubah (login, refresh, logout)
+useAuthStore.subscribe((state, prev) => {
+  if (state.token !== prev.token || state.expiresAt !== prev.expiresAt) {
+    scheduleProactiveRefresh();
+  }
+});
+scheduleProactiveRefresh(); // saat modul dimuat (store sudah ter-hydrate dari localStorage)
 
 export default api;

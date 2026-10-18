@@ -10,6 +10,7 @@ import { AuthServices } from "../services/authService";
 import { getServerMessage } from "../utils/authError";
 import { useAuth } from "./useAuth";
 import { useGoogleAuth } from "./useGoogleAuth";
+import { getDeviceInfo } from "../utils/deviceInfo";
 
 export function useRegister() {
   const navigate = useNavigate();
@@ -32,12 +33,12 @@ export function useRegister() {
 
     try {
       // confirmPassword hanya untuk validasi FE, tidak dikirim ke BE.
-await AuthServices.register({
-  name: values.name,
-  email: values.email,
-  nisn: values.nisn,
-  password: values.password,
-});
+      await AuthServices.register({
+        name: values.name,
+        email: values.email,
+        nisn: values.nisn,
+        password: values.password,
+      });
       navigate("/login", { replace: true });
     } catch (error) {
       setServerError(
@@ -50,12 +51,17 @@ await AuthServices.register({
     async (idToken: string) => {
       setServerError(null);
       try {
-const res = await AuthServices.googleLogin({
-  id_token: idToken,
-  device_info: "web",
-});
+        const res = await AuthServices.googleLogin({
+          id_token: idToken,
+          device_info: getDeviceInfo(),
+        });
         if (res.success && res.data) {
-          setAuth(res.data.user, res.data.access_token, res.data.refresh_token);
+          setAuth(
+            res.data.user,
+            res.data.access_token,
+            res.data.refresh_token,
+            res.data.expires_in,
+          );
           navigate("/", { replace: true });
         }
       } catch (error) {
