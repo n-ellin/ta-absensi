@@ -1,5 +1,5 @@
 export interface PasswordRule {
-  id: "length" | "case" | "number";
+  id: "length" | "case" | "number" | "symbol";
   label: string;
   test: (value: string) => boolean;
 }
@@ -23,12 +23,32 @@ export const PASSWORD_RULES: readonly PasswordRule[] = [
   },
 ];
 
+// PRD Reset Password: aturan dasar + wajib mengandung simbol.
+// Register tetap memakai PASSWORD_RULES (3 aturan) agar perilakunya tidak berubah.
+export const RESET_PASSWORD_RULES: readonly PasswordRule[] = [
+  ...PASSWORD_RULES,
+  {
+    id: "symbol",
+    label: "Mengandung minimal 1 simbol",
+    test: (v) => /[^A-Za-z0-9\s]/.test(v),
+  },
+];
+
 export type PasswordStrengthLevel = "weak" | "medium" | "strong";
 
-export function getPasswordStrength(value: string) {
-  const passed = PASSWORD_RULES.filter((rule) => rule.test(value)).length;
+export function getPasswordStrength(
+  value: string,
+  rules: readonly PasswordRule[] = PASSWORD_RULES,
+) {
+  const total = rules.length;
+  const passed = rules.filter((rule) => rule.test(value)).length;
+  // Untuk 3 aturan hasilnya sama dengan sebelumnya: 3 kuat, 2 sedang, selain itu lemah.
   const level: PasswordStrengthLevel =
-    passed >= 3 ? "strong" : passed === 2 ? "medium" : "weak";
+    passed === total
+      ? "strong"
+      : passed >= Math.ceil(total / 2)
+        ? "medium"
+        : "weak";
 
-  return { passed, total: PASSWORD_RULES.length, level };
+  return { passed, total, level };
 }
