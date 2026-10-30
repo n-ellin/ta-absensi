@@ -8,7 +8,7 @@ import {
   PASSWORD_FLOW_STEPS,
   type PasswordFlow,
 } from "../config/passwordFlow";
-import { useAuth } from "../hooks/useAuth";
+import { useAuth } from "@/features/auth/hooks/useAuth";
 import { IS_OTP_SIMULATED } from "../services/forgotPasswordService";
 
 interface ForgotPasswordPageProps {

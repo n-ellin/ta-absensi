@@ -10,7 +10,7 @@ import {
   OtpRateLimitError,
   requestPasswordResetOtp,
 } from "../services/forgotPasswordService";
-import { getServerMessage } from "../utils/authError";
+import { getServerMessage } from "@/features/auth/utils/authError";
 
 export type ForgotPasswordStatus =
   | { type: "idle" }

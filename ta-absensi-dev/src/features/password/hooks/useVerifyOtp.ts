@@ -14,7 +14,7 @@ import {
   requestPasswordResetOtp,
   verifyPasswordResetOtp,
 } from "../services/forgotPasswordService";
-import { getServerMessage } from "../utils/authError";
+import { getServerMessage } from "@/features/auth/utils/authError";
 
 export type VerifyOtpStatus =
   | { type: "idle" }

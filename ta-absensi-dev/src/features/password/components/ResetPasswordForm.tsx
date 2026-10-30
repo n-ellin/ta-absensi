@@ -5,9 +5,9 @@ import { PasswordInput } from "@/components/ui/PasswordInput";
 import { Button } from "@/components/ui/Button";
 import { Alert } from "@/components/ui/Alert";
 import { useResetPassword } from "../hooks/useResetPassword";
-import { RESET_PASSWORD_RULES } from "../schemas/passwordRules";
+import { RESET_PASSWORD_RULES } from "@/features/auth/schemas/passwordRules";
 import { AuthFormHeader } from "./AuthFormHeader";
-import { PasswordStrength } from "./PasswordStrength";
+import { PasswordStrength } from "@/features/auth/components/PasswordStrength";
 
 const RULES_ID = "reset-password-rules";
 

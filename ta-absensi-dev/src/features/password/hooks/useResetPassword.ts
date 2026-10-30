@@ -9,7 +9,7 @@ import {
   PasswordReusedError,
   resetPassword,
 } from "../services/resetPasswordService";
-import { getServerMessage } from "../utils/authError";
+import { getServerMessage } from "@/features/auth/utils/authError";
 
 const FAILED_FALLBACK_MESSAGE =
   "Gagal menyimpan kata sandi baru, coba lagi beberapa saat.";

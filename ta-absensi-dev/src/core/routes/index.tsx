@@ -16,13 +16,13 @@ const LoginPage = lazyWithRetry(
   () => import("@/features/auth/pages/LoginPage"),
 );
 const ForgotPasswordPage = lazyWithRetry(
-  () => import("@/features/auth/pages/ForgotPasswordPage"),
+  () => import("@/features/password/pages/ForgotPasswordPage"),
 );
 const VerifyOtpPage = lazyWithRetry(
-  () => import("@/features/auth/pages/VerifyOtpPage"),
+  () => import("@/features/password/pages/VerifyOtpPage"),
 );
 const ResetPasswordPage = lazyWithRetry(
-  () => import("@/features/auth/pages/ResetPasswordPage"),
+  () => import("@/features/password/pages/ResetPasswordPage"),
 );
 
 // Ganti Kata Sandi hanya untuk pengguna yang sudah login. Namun LoginForm

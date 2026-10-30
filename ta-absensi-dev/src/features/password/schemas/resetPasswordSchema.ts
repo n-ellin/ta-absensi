@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { RESET_PASSWORD_RULES } from "./passwordRules";
+import { RESET_PASSWORD_RULES } from "@/features/auth/schemas/passwordRules";
 
 export const PASSWORD_MIN_LENGTH = 8;
 
