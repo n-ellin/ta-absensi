@@ -1,22 +1,6 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
-import type { User } from "../../features/auth/interface/auth";
-
-interface AuthState {
-  user: User | null;
-  token: string | null; // access token
-  refreshToken: string | null;
-  expiresAt: number | null; // epoch ms kapan access token habis (dari expires_in)
-  isAuthenticated: boolean;
-
-  setAuth: (
-    user: User,
-    token: string,
-    refreshToken: string,
-    expiresIn?: number,
-  ) => void;
-  logout: () => void;
-}
+import type { AuthState } from "../interface/authState";
 
 export const useAuthStore = create<AuthState>()(
   persist(

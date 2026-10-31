@@ -2,8 +2,11 @@ import { Check } from "lucide-react";
 import {
   PASSWORD_RULES,
   getPasswordStrength,
-  type PasswordStrengthLevel,
 } from "../schemas/passwordRules";
+import type {
+  PasswordRule,
+  PasswordStrengthLevel,
+} from "../interface/passwordRules";
 
 const LEVEL_META: Record<
   PasswordStrengthLevel,
@@ -22,15 +25,23 @@ const TRANSITION = { transition: "all 0.25s ease" } as const;
 
 interface PasswordStrengthProps {
   value: string;
+  /** Daftar aturan; bawaan 3 aturan Register. */
+  rules?: readonly PasswordRule[];
+  /** Dipakai input sebagai aria-describedby. */
+  id?: string;
 }
 
-export function PasswordStrength({ value }: PasswordStrengthProps) {
-  const { passed, total, level } = getPasswordStrength(value);
+export function PasswordStrength({
+  value,
+  rules = PASSWORD_RULES,
+  id,
+}: PasswordStrengthProps) {
+  const { passed, total, level } = getPasswordStrength(value, rules);
   const meta = LEVEL_META[level];
   const hasValue = value.length > 0;
 
   return (
-    <div className="mb-3" aria-live="polite">
+    <div className="mb-3" aria-live="polite" id={id}>
       <div className="d-flex justify-content-between small mb-1">
         <span className="text-secondary">Kekuatan kata sandi</span>
         {hasValue && (
@@ -51,7 +62,7 @@ export function PasswordStrength({ value }: PasswordStrengthProps) {
       </div>
 
       <ul className="list-unstyled mb-0 small d-flex flex-column gap-1">
-        {PASSWORD_RULES.map((rule) => {
+        {rules.map((rule) => {
           const ok = rule.test(value);
           return (
             <li
@@ -75,6 +86,10 @@ export function PasswordStrength({ value }: PasswordStrengthProps) {
                 )}
               </span>
               {rule.label}
+              {/* Status tidak hanya lewat warna/ikon: dibaca juga oleh pembaca layar */}
+              <span className="visually-hidden">
+                {ok ? " (terpenuhi)" : " (belum terpenuhi)"}
+              </span>
             </li>
           );
         })}

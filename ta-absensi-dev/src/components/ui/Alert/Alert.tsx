@@ -1,7 +1,7 @@
 import type { ReactNode } from "react";
 
 export interface AlertProps {
-  variant?: "danger" | "warning";
+  variant?: "danger" | "warning" | "success";
   icon?: ReactNode;
   children: ReactNode;
 }
@@ -9,6 +9,7 @@ export interface AlertProps {
 const VARIANT_CLASS = {
   danger: "alert-danger",
   warning: "alert-warning",
+  success: "alert-success",
 } as const;
 
 export function Alert({ variant = "danger", icon, children }: AlertProps) {

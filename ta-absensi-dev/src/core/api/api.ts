@@ -1,9 +1,8 @@
-import axios, { type AxiosError, type InternalAxiosRequestConfig } from "axios";
+import axios, { type AxiosError } from "axios";
 import { useAuthStore } from "@/core/store/authStore";
 import router from "@/core/routes";
 import type { ApiResponse, AuthData } from "@/features/auth/interface/auth";
-
-type RequestConfig = InternalAxiosRequestConfig & { _retry?: boolean };
+import type { RequestConfig } from "@/core/interface/api";
 
 const api = axios.create({
   baseURL: import.meta.env.VITE_API_URL,

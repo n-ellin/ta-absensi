@@ -12,9 +12,8 @@ import {
 import { useAuth } from "./useAuth";
 import { useGoogleAuth } from "./useGoogleAuth";
 import type { AuthData } from "../interface/auth";
+import type { LoginAlert } from "../interface/hooks";
 import { getDeviceInfo } from "../utils/deviceInfo";
-
-export type LoginAlert = { variant: "danger" | "warning"; message: string };
 
 export function useLogin() {
   const navigate = useNavigate();

@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import type { CredentialHandler, ErrorHandler } from "../interface/hooks";
 
 const GSI_SRC = "https://accounts.google.com/gsi/client";
 
@@ -35,9 +36,6 @@ function loadGoogleScript(): Promise<void> {
 
   return gsiPromise;
 }
-
-type CredentialHandler = (idToken: string) => void;
-type ErrorHandler = (message: string) => void;
 
 export function useGoogleAuth(
   onCredential: CredentialHandler,

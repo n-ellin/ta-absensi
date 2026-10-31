@@ -192,3 +192,293 @@ input:-webkit-autofill:active {
 .form-check-input:not(:checked) {
   background-color: var(--color-bg-card);
 }
+
+/* =========================================================
+   Layout auth satu kolom (alur multi-langkah)
+   Dipakai halaman Lupa Kata Sandi: stepper di atas, kartu di tengah.
+   MOBILE-FIRST: nilai dasar untuk layar HP, lalu diperbesar lewat
+   breakpoint min-width ke tablet (md) dan web (lg).
+   ========================================================= */
+.auth-centered {
+  min-height: 100vh;
+  min-height: 100dvh; /* HP: tidak terpotong bilah alamat browser */
+}
+
+.auth-centered__header {
+  width: 100%;
+  margin-bottom: 1.5rem;
+}
+
+.auth-centered__card {
+  width: 100%;
+  max-width: 42rem;
+  background-color: var(--color-bg-card);
+  border: 1px solid #eeedf0;
+  border-radius: 1rem;
+  padding: 1.5rem 1.25rem;
+}
+
+@media (min-width: 576px) {
+  .auth-centered__card {
+    padding: 2rem 2.5rem;
+  }
+}
+
+@media (min-width: 768px) {
+  .auth-centered__header {
+    margin-bottom: 3rem;
+  }
+
+  .auth-centered__card {
+    padding: 3rem 4rem;
+  }
+}
+
+@media (min-width: 992px) {
+  .auth-centered__header {
+    margin-bottom: 4rem;
+  }
+
+  .auth-centered__card {
+    padding: 3rem 6rem;
+  }
+}
+
+/* =========================================================
+   Form Lupa Kata Sandi
+   Semua selector diawali .auth-form agar tidak memengaruhi Login/Register.
+   ========================================================= */
+.auth-form__icon {
+  width: 4rem;
+  height: 4rem;
+  margin: 0 auto 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background-color: var(--color-bg-main);
+  color: var(--color-brand-primary);
+}
+
+/* Target sentuh nyaman di HP (>= 44px); font input tetap 16px agar iOS tidak zoom saat fokus */
+.auth-form .form-control,
+.auth-form .input-group-text {
+  min-height: 2.75rem;
+}
+
+.auth-form__btn {
+  min-height: 3rem;
+  font-size: 0.875rem;
+  text-align: center;
+}
+
+.auth-form__note {
+  font-size: 0.8125rem;
+}
+
+/* Ikon sejajar baris pertama saat catatan membungkus di layar sempit */
+.auth-form__note svg {
+  margin-top: 0.1875rem;
+}
+
+/* Alert di halaman ini: tanpa border, teks sedikit lebih kecil (sesuai Figma) */
+.auth-form .alert {
+  border: 0;
+  font-size: 0.78rem;
+  margin-bottom: 0.75rem;
+}
+
+/* Alert di bawah input: rapatkan jarak ke input */
+.auth-form .mb-3 + .alert {
+  margin-top: -0.5rem;
+}
+
+/* Tombol loading/disabled sesuai Figma (#c4bdc5). Dibatasi ke form ini agar
+   tombol Login/Register tidak ikut berubah. */
+.auth-form .btn-dark.auth-form__btn {
+  --bs-btn-disabled-bg: var(--color-text-disabled);
+  --bs-btn-disabled-border-color: var(--color-text-disabled);
+  --bs-btn-disabled-color: #fff;
+  --bs-btn-disabled-opacity: 1;
+}
+
+/* Disabled karena limit: teks redup, bukan putih seperti saat loading */
+.auth-form .btn-dark.auth-form__btn.is-cooldown {
+  --bs-btn-disabled-color: color-mix(
+    in srgb,
+    var(--color-text-muted) 60%,
+    var(--color-text-disabled)
+  );
+}
+
+/* Input terisi (tidak fokus, tidak error): border lebih gelap daripada kosong */
+.auth-form
+  .input-group:not(:has(.is-invalid)):not(:focus-within):has(
+    .form-control:not(:placeholder-shown)
+  )
+  :is(.form-control, .input-group-text) {
+  border-color: var(--color-brand-accent);
+}
+
+/* Surel akun pada Ganti Kata Sandi: terkunci (readonly), isi abu-abu tanpa
+   border sesuai Figma. Memakai kelas khusus agar field readonly di alur lain
+   (mis. saat submit Lupa Kata Sandi) tidak ikut berubah. */
+.auth-form
+  .input-group:has(.auth-form__input--locked)
+  :is(.form-control, .input-group-text) {
+  background-color: var(--color-bg-soft);
+  border-color: transparent;
+  color: var(--color-text-secondary);
+}
+
+@media (min-width: 768px) {
+  .auth-form__icon {
+    width: 5rem;
+    height: 5rem;
+    margin-bottom: 1.5rem;
+  }
+}
+
+/* =========================================================
+   Kotak OTP (OtpInput)
+   MOBILE-FIRST: kotak mengecil mengikuti lebar layar (maks. 44px),
+   lalu diperbesar ke tablet dan web.
+   ========================================================= */
+.otp-input {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.375rem;
+}
+
+.otp-input__box {
+  flex: 1 1 0;
+  min-width: 0;
+  max-width: 2.75rem;
+  height: 3rem;
+  padding: 0;
+  text-align: center;
+  font-size: 1.125rem; /* >= 16px agar iOS tidak zoom saat fokus */
+  font-weight: 700;
+  color: var(--color-text-primary);
+  background-color: var(--color-bg-card);
+  border: 1px solid var(--color-border);
+  border-radius: 0.5rem;
+  outline: 0;
+  appearance: none;
+}
+
+.otp-input__box::placeholder {
+  color: var(--color-text-disabled);
+  font-weight: 400;
+  opacity: 1;
+}
+
+.otp-input__box:focus {
+  border-color: var(--color-border-focus);
+}
+
+.otp-input__box--invalid,
+.otp-input__box--invalid:focus {
+  border-color: var(--color-danger);
+}
+
+.otp-input__box--valid,
+.otp-input__box--valid:focus {
+  border-color: var(--color-success);
+}
+
+.otp-input__box--muted,
+.otp-input__box:disabled {
+  color: var(--color-text-muted);
+}
+
+.otp-input__dash {
+  flex: 0 0 0.625rem;
+  height: 1px;
+  background-color: var(--color-border-strong);
+}
+
+@media (min-width: 768px) {
+  .otp-input {
+    gap: 0.75rem;
+  }
+
+  .otp-input__box {
+    height: 3.25rem;
+  }
+
+  .otp-input__dash {
+    flex-basis: 1rem;
+  }
+}
+
+/* =========================================================
+   Langkah verifikasi OTP: pesan, sisa percobaan, kirim ulang
+   ========================================================= */
+.otp-feedback {
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  gap: 0.5rem;
+  margin: 0.75rem 0 0;
+  font-size: 0.78rem;
+  text-align: center;
+}
+
+.otp-feedback svg {
+  flex-shrink: 0;
+  margin-top: 0.0625rem;
+}
+
+.otp-feedback--error {
+  color: var(--color-danger);
+}
+
+.otp-feedback--success {
+  color: var(--color-success);
+}
+
+/* HP: dua baris bertumpuk di tengah; mulai 576px: kiri dan kanan */
+.auth-form__meta {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.25rem;
+  margin: 1rem 0 1.5rem;
+  font-size: 0.8125rem;
+  color: var(--color-text-secondary);
+}
+
+@media (min-width: 576px) {
+  .auth-form__meta {
+    flex-direction: row;
+    justify-content: space-between;
+  }
+}
+
+.auth-form__countdown {
+  color: var(--color-text-muted);
+}
+
+.auth-form__countdown.is-disabled {
+  color: var(--color-text-disabled);
+}
+
+.auth-form .auth-form__link {
+  padding: 0;
+  border: 0;
+  font-size: inherit;
+  font-weight: 500;
+  vertical-align: baseline;
+  color: var(--color-text-primary);
+  text-decoration: underline;
+}
+
+/* =========================================================
+   Buat Kata Sandi Baru: varian ikon sukses (layar selesai)
+   ========================================================= */
+.auth-form__icon.auth-form__icon--success {
+  background-color: var(--color-success-bg);
+  color: var(--color-success);
+}

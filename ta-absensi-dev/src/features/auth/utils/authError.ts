@@ -1,12 +1,6 @@
 import axios from "axios";
 import type { ApiResponse } from "../interface/auth";
-
-export type LoginErrorType =
-  | "invalid_credentials"
-  | "locked"
-  | "disabled"
-  | "rate_limited"
-  | "unknown";
+import type { LoginErrorType } from "../interface/loginError";
 
 // Utama: "code" dari envelope BE
 const CODE_TO_TYPE: Record<string, LoginErrorType> = {

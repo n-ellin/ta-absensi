@@ -1,8 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { useAuthStore } from "@/core/store/authStore";
 import { AuthServices } from "../services/authService";
-
-export type BootstrapStatus = "checking" | "ready";
+import type { BootstrapStatus } from "../interface/hooks";
 
 // Single-flight: StrictMode/dev remount tidak boleh memicu refresh ganda,
 // dan proteksi terhadap race beberapa komponen memakai hook ini.
