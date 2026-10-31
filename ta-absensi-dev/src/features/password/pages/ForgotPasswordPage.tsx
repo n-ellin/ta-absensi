@@ -6,8 +6,8 @@ import {
   DEV_ACCOUNT_EMAIL,
   PASSWORD_FLOWS,
   PASSWORD_FLOW_STEPS,
-  type PasswordFlow,
 } from "../config/passwordFlow";
+import type { PasswordFlow } from "../interface";
 import { useAuth } from "@/features/auth/hooks/useAuth";
 import { IS_OTP_SIMULATED } from "../services/forgotPasswordService";
 

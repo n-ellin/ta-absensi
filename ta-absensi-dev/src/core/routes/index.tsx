@@ -15,6 +15,9 @@ const RegisterPage = lazyWithRetry(
 const LoginPage = lazyWithRetry(
   () => import("@/features/auth/pages/LoginPage"),
 );
+const DashboardPage = lazyWithRetry(
+  () => import("@/features/dashboard/pages/DashboardPage"),
+);
 const ForgotPasswordPage = lazyWithRetry(
   () => import("@/features/password/pages/ForgotPasswordPage"),
 );
@@ -41,6 +44,15 @@ const router = createBrowserRouter([
     // Menangkap error runtime/loader di semua child route sebagai 500
     errorElement: withSuspense(<ErrorPage code="500" />),
     children: [
+      // Halaman yang butuh login
+      {
+        path: "/",
+        element: <ProtectedRoute />,
+        children: [
+          { index: true, element: withSuspense(<DashboardPage />) },
+        ],
+      },
+      // Halaman auth tanpa login
       {
         path: "/login",
         element: withSuspense(<LoginPage />),

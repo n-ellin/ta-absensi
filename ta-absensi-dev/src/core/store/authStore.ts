@@ -1,33 +1,45 @@
 import { create } from "zustand";
-import type { User } from "../../features/auth/interface/auth";
+import { persist } from "zustand/middleware";
+import type { AuthState } from "../interface/authState";
 
-interface AuthState {
-  user: User | null;
-  token: string | null;
-  isAuthenticated: boolean;
-
-  setAuth: (user: User, token: string) => void;
-  logout: () => void;
-}
-
-export const useAuthStore = create<AuthState>((set) => ({
-  user: null,
-  token: null,
-  isAuthenticated: false,
-
-  setAuth: (user, token) => {
-    set({
-      user,
-      token,
-      isAuthenticated: true,
-    });
-  },
-
-  logout: () => {
-    set({
+export const useAuthStore = create<AuthState>()(
+  persist(
+    (set) => ({
       user: null,
       token: null,
+      refreshToken: null,
+      expiresAt: null,
       isAuthenticated: false,
-    });
-  },
-}));
+
+      setAuth: (user, token, refreshToken, expiresIn) => {
+        set({
+          user,
+          token,
+          refreshToken,
+          expiresAt: expiresIn ? Date.now() + expiresIn * 1000 : null,
+          isAuthenticated: true,
+        });
+      },
+
+      logout: () => {
+        set({
+          user: null,
+          token: null,
+          refreshToken: null,
+          expiresAt: null,
+          isAuthenticated: false,
+        });
+      },
+    }),
+    {
+      name: "e-absensi-auth", // key di localStorage
+      partialize: (state) => ({
+        user: state.user,
+        token: state.token,
+        refreshToken: state.refreshToken,
+        expiresAt: state.expiresAt,
+        isAuthenticated: state.isAuthenticated,
+      }),
+    },
+  ),
+);

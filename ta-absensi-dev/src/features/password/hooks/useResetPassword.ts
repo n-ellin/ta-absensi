@@ -10,14 +10,10 @@ import {
   resetPassword,
 } from "../services/resetPasswordService";
 import { getServerMessage } from "@/features/auth/utils/authError";
+import type { UseResetPasswordOptions } from "../interface";
 
 const FAILED_FALLBACK_MESSAGE =
   "Gagal menyimpan kata sandi baru, coba lagi beberapa saat.";
-
-interface UseResetPasswordOptions {
-  /** Dipanggil hanya setelah service mengembalikan sukses. */
-  onSuccess: () => void;
-}
 
 export function useResetPassword(
   email: string,

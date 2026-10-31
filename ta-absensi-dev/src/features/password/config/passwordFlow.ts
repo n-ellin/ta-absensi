@@ -16,31 +16,9 @@
 // perlu membedakan kedua alur ini (mis. menerima parameter `flow`).
 // =============================================================================
 
-export type PasswordFlow = "forgot" | "change";
+import type { PasswordFlow, PasswordFlowConfig } from "../interface";
 
 export const PASSWORD_FLOW_STEPS = ["Surel", "Kode OTP", "Sandi Baru"];
-
-export interface PasswordFlowConfig {
-  /** true: surel diambil dari akun yang sedang login dan tidak bisa diubah. */
-  usesAccountEmail: boolean;
-  paths: {
-    start: string;
-    verify: string;
-    newPassword: string;
-  };
-  /** Tujuan tombol "Kembali" di langkah 1 dan tombol di layar selesai. */
-  exitPath: string;
-  start: {
-    title: string;
-    description: string;
-    sentMessage: string;
-    backLabel: string;
-  };
-  success: {
-    description: string;
-    buttonLabel: string;
-  };
-}
 
 export const PASSWORD_FLOWS: Record<PasswordFlow, PasswordFlowConfig> = {
   forgot: {

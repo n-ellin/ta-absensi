@@ -7,17 +7,12 @@ import { ResetPasswordSuccess } from "../components/ResetPasswordSuccess";
 import {
   PASSWORD_FLOWS,
   PASSWORD_FLOW_STEPS,
-  type PasswordFlow,
 } from "../config/passwordFlow";
+import type { PasswordFlow, ResetPasswordLocationState } from "../interface";
 import {
   IS_RESET_SIMULATED,
   SIMULATED_REUSED_PASSWORD,
 } from "../services/resetPasswordService";
-
-export interface ResetPasswordLocationState {
-  email: string;
-  otpVerified: true;
-}
 
 function isResetState(state: unknown): state is ResetPasswordLocationState {
   const value = state as Partial<ResetPasswordLocationState> | null;

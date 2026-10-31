@@ -20,7 +20,10 @@ export function LoginForm() {
     isSubmitting,
     isDisabledModalOpen,
     closeDisabledModal,
-    handleGoogleLogin,
+    googleEnabled,
+    googleFailed,
+    handleGoogleUnavailable,
+    googleContainerRef,
   } = useLogin();
 
   return (
@@ -75,16 +78,22 @@ export function LoginForm() {
           </Link>
         </div>
 
-        <Button type="submit" isLoading={isSubmitting} >
+        <Button type="submit" isLoading={isSubmitting}>
           Masuk
         </Button>
 
         <Divider text="ATAU" />
-
-        <GoogleButton onClick={handleGoogleLogin}>
-          Masuk dengan Google
-        </GoogleButton>
-
+        {!googleEnabled || googleFailed ? (
+          <GoogleButton onClick={handleGoogleUnavailable}>
+            Masuk dengan Google
+          </GoogleButton>
+        ) : (
+          <div
+            ref={googleContainerRef}
+            className="d-flex justify-content-center"
+          />
+        )}
+        
         <p className="text-center small text-secondary mt-3 mb-0">
           Belum punya akun?{" "}
           <Link

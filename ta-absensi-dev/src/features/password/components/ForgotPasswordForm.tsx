@@ -12,7 +12,8 @@ import { Input } from "@/components/ui/Input";
 import { Button } from "@/components/ui/Button";
 import { Alert } from "@/components/ui/Alert";
 import { useForgotPassword } from "../hooks/useForgotPassword";
-import { PASSWORD_FLOWS, type PasswordFlow } from "../config/passwordFlow";
+import { PASSWORD_FLOWS } from "../config/passwordFlow";
+import type { PasswordFlow } from "../interface";
 import { AuthFormHeader } from "./AuthFormHeader";
 import { SecurityNote } from "./SecurityNote";
 

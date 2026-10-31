@@ -1,5 +1,6 @@
 import axios from "axios";
 import api from "@/core/api/api";
+import type { ApiErrorBody } from "../interface";
 import {
   clearPendingOtp,
   getPendingOtpCode,
@@ -20,11 +21,6 @@ export class PasswordReusedError extends Error {
     super("Kata sandi baru tidak boleh sama dengan kata sandi sebelumnya");
     this.name = "PasswordReusedError";
   }
-}
-
-interface ApiErrorBody {
-  code?: string;
-  message?: string;
 }
 
 // Hanya RATE_LIMITED yang dipetakan ke OtpRateLimitError. OTP_INVALID,

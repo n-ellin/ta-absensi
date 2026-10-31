@@ -11,25 +11,13 @@ import {
   requestPasswordResetOtp,
 } from "../services/forgotPasswordService";
 import { getServerMessage } from "@/features/auth/utils/authError";
-
-export type ForgotPasswordStatus =
-  | { type: "idle" }
-  | { type: "sent"; email: string }
-  | { type: "rate_limited"; retryAfterSeconds: number }
-  | { type: "failed"; message: string };
+import type { ForgotPasswordStatus, UseForgotPasswordOptions } from "../interface";
 
 const FAILED_FALLBACK_MESSAGE =
   "Gagal mengirim kode verifikasi, coba lagi beberapa saat.";
 
 // Alert sukses ditampilkan sebentar sebelum pindah ke langkah "Kode OTP".
 const SENT_ALERT_DURATION_MS = 1500;
-
-interface UseForgotPasswordOptions {
-  /** Rute langkah 2 (Kode OTP) milik alur pemakai. */
-  verifyPath: string;
-  /** Surel awal; diisi pada alur Ganti Kata Sandi (surel akun yang login). */
-  defaultEmail?: string;
-}
 
 export function useForgotPassword({
   verifyPath,

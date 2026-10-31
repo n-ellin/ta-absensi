@@ -6,8 +6,8 @@ import { VerifyOtpForm } from "../components/VerifyOtpForm";
 import {
   PASSWORD_FLOWS,
   PASSWORD_FLOW_STEPS,
-  type PasswordFlow,
 } from "../config/passwordFlow";
+import type { PasswordFlow } from "../interface";
 import {
   IS_OTP_SIMULATED,
   SIMULATED_EXPIRED_CODE,

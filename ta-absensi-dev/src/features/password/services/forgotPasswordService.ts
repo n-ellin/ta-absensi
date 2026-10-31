@@ -1,5 +1,10 @@
 import axios from "axios";
 import api from "@/core/api/api";
+import type {
+  ApiErrorBody,
+  PendingOtp,
+  RequestOtpOptions,
+} from "../interface";
 
 export const OTP_COOLDOWN_SECONDS = 60;
 export const OTP_MAX_ATTEMPTS = 3;
@@ -41,11 +46,6 @@ export class OtpExpiredError extends Error {
   }
 }
 
-interface ApiErrorBody {
-  code?: string;
-  message?: string;
-}
-
 /** Detik tunggu dari header `Retry-After`, lalu pesan "tunggu N detik", lalu default. */
 export function getRetryAfterSeconds(error: unknown): number {
   if (!axios.isAxiosError(error)) return OTP_COOLDOWN_SECONDS;
@@ -67,11 +67,6 @@ function getErrorMessage(error: unknown): string | undefined {
   return axios.isAxiosError(error)
     ? (error.response?.data as ApiErrorBody | undefined)?.message
     : undefined;
-}
-
-interface RequestOtpOptions {
-  /** Kirim ulang dari layar verifikasi: cooldown dihitung backend. */
-  isResend?: boolean;
 }
 
 // Hanya 429 yang berarti "tunggu sebentar lalu coba lagi" yang dipetakan ke
@@ -113,11 +108,6 @@ export async function requestPasswordResetOtp(
 // Backend memvalidasi OTP bersamaan dengan penyimpanan kata sandi baru
 // (endpoint gabungan verify+reset), jadi verifikasi HTTP baru terjadi saat
 // `resetPassword` dipanggil. Langkah verifikasi menyimpan kode di sini.
-interface PendingOtp {
-  email: string;
-  code: string;
-}
-
 let pendingOtp: PendingOtp | null = null;
 
 /** Kode OTP tersimpan untuk surel terkait; null bila belum ada atau surel berbeda. */

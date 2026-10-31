@@ -2,9 +2,11 @@ import { Check } from "lucide-react";
 import {
   PASSWORD_RULES,
   getPasswordStrength,
-  type PasswordRule,
-  type PasswordStrengthLevel,
 } from "../schemas/passwordRules";
+import type {
+  PasswordRule,
+  PasswordStrengthLevel,
+} from "../interface/passwordRules";
 
 const LEVEL_META: Record<
   PasswordStrengthLevel,

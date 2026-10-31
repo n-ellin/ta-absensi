@@ -1,8 +1,4 @@
-export interface PasswordRule {
-  id: "length" | "case" | "number" | "symbol";
-  label: string;
-  test: (value: string) => boolean;
-}
+import type { PasswordRule, PasswordStrengthLevel } from "../interface/passwordRules";
 
 // Satu sumber aturan: dipakai oleh schema (validasi) dan PasswordStrength (UI).
 export const PASSWORD_RULES: readonly PasswordRule[] = [
@@ -33,8 +29,6 @@ export const RESET_PASSWORD_RULES: readonly PasswordRule[] = [
     test: (v) => /[^A-Za-z0-9\s]/.test(v),
   },
 ];
-
-export type PasswordStrengthLevel = "weak" | "medium" | "strong";
 
 export function getPasswordStrength(
   value: string,

@@ -15,20 +15,11 @@ import {
   verifyPasswordResetOtp,
 } from "../services/forgotPasswordService";
 import { getServerMessage } from "@/features/auth/utils/authError";
-
-export type VerifyOtpStatus =
-  | { type: "idle" }
-  | { type: "verified" }
-  | { type: "invalid" }
-  | { type: "expired" }
-  | { type: "exhausted" }
-  | { type: "rate_limited" }
-  | { type: "failed"; message: string };
-
-export interface VerifyOtpFeedback {
-  tone: "error" | "success";
-  message: string;
-}
+import type {
+  UseVerifyOtpOptions,
+  VerifyOtpFeedback,
+  VerifyOtpStatus,
+} from "../interface";
 
 const MESSAGES = {
   verified: "Kode berhasil diverifikasi",
@@ -62,11 +53,6 @@ function getFeedback(
     default:
       return null;
   }
-}
-
-interface UseVerifyOtpOptions {
-  /** Dipanggil setelah kode terverifikasi; pemakai menentukan langkah berikutnya. */
-  onVerified?: () => void;
 }
 
 export function useVerifyOtp(
